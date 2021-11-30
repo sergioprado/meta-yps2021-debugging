@@ -1,0 +1,35 @@
+From 7ac948d0b46747a0473aa6416019efb60e63d583 Mon Sep 17 00:00:00 2001
+From: Sergio Prado <sergio.prado@toradex.com>
+Date: Thu, 4 Nov 2021 17:37:16 -0300
+Subject: [PATCH] Inject bug to crash uptime
+
+Signed-off-by: Sergio Prado <sergio.prado@toradex.com>
+---
+ fs/proc/uptime.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/proc/uptime.c b/fs/proc/uptime.c
+index 5a1b228964fb..82c23b48fbf8 100644
+--- a/fs/proc/uptime.c
++++ b/fs/proc/uptime.c
+@@ -15,6 +15,7 @@ static int uptime_proc_show(struct seq_file *m, void *v)
+ 	u64 nsec;
+ 	u32 rem;
+ 	int i;
++	int *ptr = 0;
+ 
+ 	nsec = 0;
+ 	for_each_possible_cpu(i)
+@@ -25,6 +26,9 @@ static int uptime_proc_show(struct seq_file *m, void *v)
+ 
+ 	idle.tv_sec = div_u64_rem(nsec, NSEC_PER_SEC, &rem);
+ 	idle.tv_nsec = rem;
++
++	*ptr = idle.tv_nsec;
++
+ 	seq_printf(m, "%lu.%02lu %lu.%02lu\n",
+ 			(unsigned long) uptime.tv_sec,
+ 			(uptime.tv_nsec / (NSEC_PER_SEC / 100)),
+-- 
+2.25.1
+

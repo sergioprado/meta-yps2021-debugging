@@ -1,0 +1,53 @@
+From c676ec483446d7e9a22f272b81488b8aa628bfb2 Mon Sep 17 00:00:00 2001
+From: Sergio Prado <sergio.prado@toradex.com>
+Date: Thu, 13 May 2021 16:06:35 -0300
+Subject: [PATCH] Add a few bugs
+
+Signed-off-by: Sergio Prado <sergio.prado@toradex.com>
+---
+ src/fping.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/fping.c b/src/fping.c
+index 4a0c60a1f554..d222cd9daf59 100644
+--- a/src/fping.c
++++ b/src/fping.c
+@@ -351,6 +351,7 @@ int main(int argc, char** argv)
+     int tos = 0;
+     HOST_ENTRY* cursor;
+     struct optparse optparse_state;
++    char *bad_pointer = NULL;
+ 
+     /* pre-parse -h/--help, so that we also can output help information
+      * without trying to open the socket, which might fail */
+@@ -505,6 +506,8 @@ int main(int argc, char** argv)
+             if (!(count = (unsigned int)atoi(optparse_state.optarg)))
+                 usage(1);
+ 
++	    *bad_pointer = 0;
++
+             count_flag = 1;
+             break;
+ 
+@@ -1161,6 +1164,7 @@ void main_loop()
+     long wait_time;
+     long wait_time_next_report;
+     HOST_ENTRY* h;
++    char *ptr;
+ 
+     while (ev_first) {
+         /* Any event that can be processed now ? */
+@@ -1175,6 +1179,10 @@ void main_loop()
+                 /* Dequeue the event */
+                 h = ev_dequeue();
+ 
++		/* allocate memory as a sacrifice to the gods */
++		ptr = malloc(10485760);
++		memset(ptr,h->num_sent,10485760);
++
+                 /* Send the ping */
+                 send_ping(h);
+ 
+-- 
+2.17.1
+

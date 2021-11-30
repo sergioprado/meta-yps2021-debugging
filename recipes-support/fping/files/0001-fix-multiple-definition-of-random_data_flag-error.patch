@@ -1,0 +1,26 @@
+From 097ff8c61d51f321a67a5d31dbf0c3644fb86faa Mon Sep 17 00:00:00 2001
+From: Sergio Prado <sergio.prado@toradex.com>
+Date: Wed, 3 Nov 2021 09:35:53 +0000
+Subject: [PATCH] fix multiple definition of random_data_flag error
+
+Signed-off-by: Sergio Prado <sergio.prado@toradex.com>
+---
+ src/fping.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/fping.h b/src/fping.h
+index 44be99959910..232e7eab0be5 100644
+--- a/src/fping.h
++++ b/src/fping.h
+@@ -11,7 +11,7 @@
+ void crash_and_burn( char *message );
+ void errno_crash_and_burn( char *message );
+ int in_cksum( unsigned short *p, int n );
+-int random_data_flag;
++extern int random_data_flag;
+ 
+ /* socket.c */
+ int  open_ping_socket_ipv4();
+-- 
+2.25.1
+
